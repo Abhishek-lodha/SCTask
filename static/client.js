@@ -1,14 +1,24 @@
+function loadPage(href) {
+    $.ajax({
+        url: href,
+        type: 'get',
+        success: (data) => {
+            document.getElementById('bottom').innerHTML = data;
+        }
+    });
+}
+
 $('#loginForm').submit(function() {
     $.ajax({
         url: $('#loginForm').attr('action'),
         type: $('#loginForm').attr('method'),
         data: $('#loginForm').serialize(),
-        success: function(data) {
+        success: (data) => {
             var token = data['token'];
             window.localStorage.sc_token = token;
-            $('#available_actions').show();
+            loadPage('/tasks');
         },
-        error: function(err) {
+        error: (err) => {
             var jsonResponse = JSON.parse(err.responseText);
             alert(jsonResponse['message']);
         }
@@ -19,7 +29,7 @@ $('#loginForm').submit(function() {
 function patchObject() {
     var packet = {
         'default': document.getElementById("default_json").innerHTML,
-        "patch": document.getElementById("patch").innerHTML
+        "patch": document.getElementById("patch").value
     };
     $.ajax({
         url: '/patch',
@@ -28,10 +38,10 @@ function patchObject() {
             'token': window.localStorage.sc_token
         },
         data: packet,
-        success: function(data) {
+        success: (data) => {
             document.getElementById("updated_json").innerHTML = JSON.stringify(data);
         },
-        error: function(err) {
+        error: (err) => {
             var jsonResponse = JSON.parse(err.responseText);
             alert(jsonResponse['message']);
         }
@@ -49,7 +59,7 @@ function createThumbnail() {
             'token': window.localStorage.sc_token
         },
         data: image_url,
-        success: function(data) {
+        success: (data) => {
             console.log(data);
             var src = 'data:image/jpg;base64,' + data;
             var newImage = document.createElement('img');
@@ -57,7 +67,7 @@ function createThumbnail() {
             document.querySelector('#thumbnail').innerHTML = newImage.outerHTML;
             // $("#thumbnail").html("<img src='data:image/jpg;base64," + data +"' />");
         },
-        error: function(err) {
+        error: (err) => {
             var jsonResponse = JSON.parse(err.responseText);
             alert(jsonResponse['message']);
         }

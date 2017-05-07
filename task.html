@@ -1,15 +1,28 @@
-<html>
-  <head>
-    <title>SC TASK</title>
-  </head>
-  <body>
-      <h1>SC TASK - ABHISHEK LODHA</h1>
-      Default json: [{ name:Abhishek, email:abhishek@lodha.com },
-      { name:Test, email:test@user.com }]
-      <br>
-      <br>
-      <textarea rows="4" cols="100"></textarea>
-      <p id="updated_json"></p>
-  </body>
+<h1>Available Actions</h1>
+<h3>Json Patch</h3>
+<b>Original Object : </b>
+<p id="default_json">{"name":"Abhishek", "email":"abhishek@lodha.com"}<p>
+<br>
+<textarea id="patch" rows="10" cols="100">
+                  [{
+                        "op": "replace",
+                        "path": "/name",
+                        "value": "Test User"
+                    },
+                    {
+                        "op": "add",
+                        "path": "/email",
+                        "value": "test@test.com"
+                    }]
+</textarea>
+<button type="button" onclick="patchObject()">Patch</button>
+<br>
+<b>Updated Object : </b>
+<p id="updated_json"></p>
+<br><br>
 
-</html>
+<h3>Thumbnail</h3>
+<br>
+<input id="image_url" value="https://www.w3schools.com/css/trolltunga.jpg">
+<button type="button" onclick="createThumbnail()">Thumbnail</button>
+<div id="thumbnail"></div>

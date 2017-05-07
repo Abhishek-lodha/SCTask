@@ -24,7 +24,11 @@ app.use(bodyParser.urlencoded({
 app.use('/static', express.static(__dirname + '/static'));
 
 app.get('/', (req, res) => {
-    res.sendfile("index.html");
+    res.sendfile("static/index.html");
+});
+
+app.get('/tasks', (req, res) => {
+    res.sendfile("static/task.html");
 });
 
 //TO HANDLE LOGIN REQUESTS
