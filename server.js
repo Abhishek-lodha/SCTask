@@ -28,7 +28,10 @@ app.get('/', (req, res) => {
 });
 
 app.get('/tasks', (req, res) => {
-    res.sendfile("static/task.html");
+    const token = req.headers.token;
+    if (jwt.verify(token, jwtOptions.secretOrKey)) {
+        res.sendfile("static/task.html");
+    }
 });
 
 //TO HANDLE LOGIN REQUESTS
@@ -55,18 +58,20 @@ app.post('/login', (req, res) => {
 //TO HANDLE JSON PATCH REQUEST
 app.post('/patch', (req, res) => {
     const token = req.headers.token;
-    if (jwt.verify(token, jwtOptions.secretOrKey)) {
-        if (validator.isJSON(req.body['default']) && validator.isJSON(req.body['patch'])) {
-            const myObj = JSON.parse(req.body['default']);
-            const patches = JSON.parse(req.body['patch']);
-            jsonpatch.apply(myObj, patches);
-            res.json(myObj);
-        } else {
-            res.status(500).json({
-                message: 'Please enter valid json format'
-            });
+    try {
+        if (jwt.verify(token, jwtOptions.secretOrKey)) {
+            if (validator.isJSON(req.body['default']) && validator.isJSON(req.body['patch'])) {
+                const myObj = JSON.parse(req.body['default']);
+                const patches = JSON.parse(req.body['patch']);
+                jsonpatch.apply(myObj, patches);
+                res.json(myObj);
+            } else {
+                res.status(500).json({
+                    message: 'Please enter valid json format'
+                });
+            }
         }
-    } else {
+    } catch (e) {
         res.status(500).json({
             message: 'User unrecognisable'
         });
@@ -76,29 +81,31 @@ app.post('/patch', (req, res) => {
 //TO HANDLE THUMBNAIL CREATION REQUESTS
 app.post('/thumbnail', (req, res) => {
     const token = req.headers.token;
-    if (jwt.verify(token, jwtOptions.secretOrKey)) {
-        const imageURL = req.body['url'];
-        if (validator.isURL(imageURL)) {
-            const paramOperation = "square";
-            const paramValue = 100;
-            const imageFilename = "image_thumbnail.jpg";
+    try {
+        if (jwt.verify(token, jwtOptions.secretOrKey)) {
+            const imageURL = req.body['url'];
+            if (validator.isURL(imageURL)) {
+                const paramOperation = "square";
+                const paramValue = 100;
+                const imageFilename = "image_thumbnail.jpg";
 
-            const rethumbUri = "http://api.rethumb.com/v1/" + paramOperation + "/" + paramValue + "/" + imageURL;
-            const getThumbnail = function(uri, callback) {
-                request.head(uri, function(err, res, body) {
-                    request(uri).pipe(fs.createWriteStream(imageFilename)).on('close', callback);
+                const rethumbUri = "http://api.rethumb.com/v1/" + paramOperation + "/" + paramValue + "/" + imageURL;
+                const getThumbnail = function(uri, callback) {
+                    request.head(uri, function(err, res, body) {
+                        request(uri).pipe(fs.createWriteStream(imageFilename)).on('close', callback);
+                    });
+                };
+
+                getThumbnail(rethumbUri, function() {
+                    res.sendfile(imageFilename);
                 });
-            };
-
-            getThumbnail(rethumbUri, function() {
-                res.sendfile(imageFilename);
-            });
-        } else {
-            res.status(500).json({
-                message: 'Enter valid image url'
-            });
+            } else {
+                res.status(500).json({
+                    message: 'Enter valid image url'
+                });
+            }
         }
-    } else {
+    } catch (e) {
         res.status(500).json({
             message: 'User unrecognisable'
         });

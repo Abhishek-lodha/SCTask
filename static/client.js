@@ -2,6 +2,9 @@ function loadPage(href) {
     $.ajax({
         url: href,
         type: 'get',
+        headers: {
+            'token': window.localStorage.sc_token
+        },
         success: (data) => {
             document.getElementById('bottom').innerHTML = data;
         }
