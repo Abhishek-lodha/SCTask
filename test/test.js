@@ -228,7 +228,7 @@ describe("Thumbnail Test", ()=> {
   });
 
   it('should be able to return thumbnail with status code 200', function(done) {
-    this.timeout(60000);
+    this.timeout(25000);
     async.waterfall(
       [
         function login(next) {
@@ -258,6 +258,9 @@ describe("Thumbnail Test", ()=> {
             .send(image)
             .expect(200)
             .end((err, res)=> {});
+        },
+        function tryGettingImage(next){
+            request(app).get('/image_thumbnail.jpg').expect(200,done);
         }
       ],
       function finished(err, result) {

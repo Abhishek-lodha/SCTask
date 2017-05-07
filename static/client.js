@@ -63,12 +63,10 @@ function createThumbnail() {
         },
         data: image_url,
         success: (data) => {
-            console.log(data);
-            var src = 'data:image/jpg;base64,' + data;
+            const src = data;
             var newImage = document.createElement('img');
             newImage.src = src;
-            document.querySelector('#thumbnail').innerHTML = newImage.outerHTML;
-            // $("#thumbnail").html("<img src='data:image/jpg;base64," + data +"' />");
+            $("#thumbnail").html("<img src='" + data +"' />");
         },
         error: (err) => {
             var jsonResponse = JSON.parse(err.responseText);

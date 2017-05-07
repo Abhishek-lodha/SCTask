@@ -8,7 +8,8 @@ const express = require('express'),
     request = require("request"),
     passport = require("passport"),
     passportJWT = require("passport-jwt"),
-    validator = require('validator');
+    validator = require('validator'),
+    path = require("path");
 
 const ExtractJwt = passportJWT.ExtractJwt;
 const JwtStrategy = passportJWT.Strategy;
@@ -97,7 +98,8 @@ app.post('/thumbnail', (req, res) => {
                 };
 
                 getThumbnail(rethumbUri, function() {
-                    res.sendfile(imageFilename);
+                    // res.sendfile(imageFilename);
+                    res.send("/"+imageFilename);
                 });
             } else {
                 res.status(500).json({
@@ -111,6 +113,10 @@ app.post('/thumbnail', (req, res) => {
         });
     }
 
+});
+
+app.get('/image_thumbnail.jpg', function (req, res) {
+    res.sendfile('image_thumbnail.jpg');
 });
 
 app.listen(8080, function() {
