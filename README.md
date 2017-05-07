@@ -15,6 +15,7 @@ npm - npm install
 * Username - can only contain alphnumeric characters
 * Password - can accept all ascii characters
 * Imageurl - must be a url with correct protocol.
+* Patch object - must be in valid json format
 
 ### Running test cases
 * cd /path/to/cloned/repo
@@ -25,3 +26,5 @@ npm - npm install
 * npm start
 * open [localhost:8080](http://localhost:8080) in browser
 
+### Checking Coverage using Istanbul
+* istanbul cover _mocha
